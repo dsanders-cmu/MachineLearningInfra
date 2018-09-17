@@ -1,0 +1,12 @@
+{
+    "DryRun": false,
+    "ImageId": "ami-00499ff523cc859e6",
+    "KeyName": "personal",
+    "SecurityGroups": [
+        "launch-wizard-1"
+    ],
+    "InstanceType": "t2.medium",
+    "Monitoring": {
+        "Enabled": true
+    }
+}
