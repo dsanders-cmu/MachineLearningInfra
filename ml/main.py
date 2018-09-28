@@ -2,14 +2,17 @@ import argparse
 import json
 from utils import *
 import numpy as np
+from shutil import copyfile
 
-#from model import Model
 from pytorch_nn import PytorchNN
+from speech_dataset import get_data
+
+DEFAULT_CONFIG_PATH = 'config.json'
 
 def parse_arguments():
     # Command-line flags are defined here.
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='config.json',
+    parser.add_argument('--config', default=DEFAULT_CONFIG_PATH,
                         help="Path to config file.")
 
     args = parser.parse_args()
@@ -31,28 +34,52 @@ def init_directories(config):
 
     return base_dir, model_dir, log_dir
 
-def main(config):
+def main(config=DEFAULT_CONFIG_PATH):
     # Read the parameters from the config file
     with open(config) as f:
         params = json.load(f)
 
+    # Set seed
+    seed = params['seed']
+    if seed > 0:
+        np.random.seed(seed)
+
     # Create necessary folders
     base_dir, model_dir, log_dir = init_directories(params)
+    copyfile(config, os.path.join(base_dir, config))
+
+    # Get data
+    train_data, val_data, test_data = get_data(params)
+    dim_in = train_data.get_dim_in()
+    dim_out = train_data.get_num_labels()
 
     # Create model
-    #m = Model(params, base_dir, model_dir, log_dir)
-    dim_in = 1
-    dim_out = 1
     m = PytorchNN(params, dim_in, dim_out, base_dir, model_dir, log_dir)
+    if m.use_cuda:
+        m = m.cuda()
+
+    load_model_path = params['load_model_at_start']
+    if load_model_path != '':
+        m.load_model(load_model_path)
 
     mode = params['mode']
     if mode == 0:
         # Train
-        m.train()
-
+        m.train_model(train_data, val_data, test_data=test_data)
+        
     elif mode == 1:
+        # Load weights
+        m.load_model(load_model_path)
+
         # Evaluate
-        m.test()
+        test_generator = test_data.get_generator()
+        predictions = []
+        for x_batch, y_batch in test_generator:
+            batch_pred = m.process_batch(x_batch)
+            predictions = predictions + list(batch_pred)
+        
+        submission_file = os.path.join(m.base_dir, 'submit.csv')
+        save_submission(submission_file, predictions)
 
 if __name__ == '__main__':
     config = parse_arguments()

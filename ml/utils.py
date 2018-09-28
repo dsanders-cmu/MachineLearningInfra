@@ -20,3 +20,15 @@ def generate_standard_plot(dest, x, x_label, y, y_label, title, num_plots=1, leg
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.savefig(dest)
+
+def save_submission(fname, preds):    
+    n = len(preds)
+    ids = np.arange(n)
+
+    p1 = list(ids)
+    p1.insert(0, 'id')
+    p2 = list(preds)
+    p2.insert(0, 'label')
+    dump = np.concatenate(([p1], [p2]), axis=0)
+    np.savetxt(fname, dump.transpose(), delimiter=',', fmt='%s')
+    

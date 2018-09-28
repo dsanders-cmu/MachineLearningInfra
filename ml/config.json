@@ -3,10 +3,18 @@
 	"mode": 0,
 	"load_model_at_start": "",
 	
-	"num_epochs": "200",
-	"learning_rate": "0.0001",
-	"batch_size": "32",
+	"num_epochs": 2,
+	"learning_rate": 0.001,
+	"batch_size": 64,
 	"dropout": 0,
+	"weight_decay": 0,
+	"num_neurons": [300, 300, 300, 300],
+	"batch_norms": 3,
+	"k": 3,
 
-	"output_dir": "output"
+	"seed": 0,
+	"analysis_freq": 1,
+	"output_dir": "output",
+	"data_path": "data",
+	"num_workers": 4
 }
