@@ -1,4 +1,5 @@
 aws/instances.json
+ml/playground/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
