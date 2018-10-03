@@ -81,7 +81,7 @@ class Model():
                 print(str(i+1) + '/' + str(num_epochs) + ': ' + str(minutes) + ' minutes')
 
                 # Summarize analysis
-                self.summarize_analysis(i, train_size, val_size)
+                self.summarize_analysis(int(i/analysis_freq), train_size, val_size)
 
                 self.begin_train()
 
