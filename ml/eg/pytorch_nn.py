@@ -127,14 +127,16 @@ class PytorchNN(Model, nn.Module):
         print(str(training_loss) + ', ' + str(validation_loss) + ', ' + str(training_acc) + ', ' + str(validation_acc))
 
         # Save progress
-        self.training_losses.append(training_loss)
-        self.training_accuracies.append(training_acc)
-        self.validation_losses.append(validation_loss)
-        self.validation_accuracies.append(validation_acc)
+        self.train_logger.log_scalar('loss', training_loss, i)
+        self.val_logger.log_scalar('loss', validation_loss, i)
+        self.train_logger.log_scalar('accuracy', training_acc, i)
+        self.val_logger.log_scalar('accuracy', validation_acc, i)
 
-        x = np.arange(i+1)
-        generate_standard_plot(os.path.join(self.log_dir, 'loss.png'), x, 'Epoch', [self.training_losses, self.validation_losses], 'Loss', 'Training and Validation Losses over Training', num_plots=2, legends=['Train', 'Validation'])
-        generate_standard_plot(os.path.join(self.log_dir, 'acc.png'), x, 'Epoch', [self.training_accuracies, self.validation_accuracies], 'Error Rate', 'Training and Validation Accuracies over Training', num_plots=2, legends=['Train', 'Validation'])
+        # Visualize weights
+        for tag, value in self.named_parameters():
+            tag = tag.replace('.', '/')
+            self.train_logger.log_histogram(tag, value.data.cpu().numpy(), i)
+            self.train_logger.log_histogram(tag+'/grad', value.grad.data.cpu().numpy(), i)  
 
     def save_model(self):
         file_path = os.path.join(self.model_dir, 'weights.pt')

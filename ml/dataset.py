@@ -39,6 +39,7 @@ class Dataset(torch.utils.data.Dataset):
 
 class DataHanlder():
     def __init__(self, dataset, train, batch_size, num_workers):
+        self.dataset = dataset
         self.num_data = len(dataset)
         self.dim_in = dataset.get_dim_in()
         self.dim_out = dataset.get_dim_out()
@@ -54,6 +55,9 @@ class DataHanlder():
         self.generator = data.DataLoader(dataset, **params)
 
         self.num_batches = len(self.generator)
+
+    def __getitem__(self, index):
+        return self.dataset[index]
 
     def get_num_data(self):
         return self.num_data
@@ -72,4 +76,7 @@ class DataHanlder():
 
     def get_generator(self):
         return self.generator
+
+    def get_dataset(self):
+        return self.dataset
 

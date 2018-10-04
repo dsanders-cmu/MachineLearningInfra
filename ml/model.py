@@ -2,6 +2,7 @@ import numpy as np
 import os
 from utils import *
 import time
+from logger import Logger
 
 class Model():
     def __init__(self, config, dim_in, dim_out, base_dir, model_dir, log_dir):
@@ -16,6 +17,15 @@ class Model():
         self.base_dir = base_dir
         self.model_dir = model_dir
         self.log_dir = log_dir
+        self.log_train_dir = os.path.join(log_dir, 'train')
+        self.log_val_dir = os.path.join(log_dir, 'validation')
+
+        # Initialize loggers
+        create_dir(self.log_train_dir)
+        self.train_logger = Logger(self.log_train_dir)
+        create_dir(self.log_val_dir)
+        self.val_logger = Logger(self.log_val_dir)
+
 
     def predict(self, x):
         pass

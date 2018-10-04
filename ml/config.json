@@ -4,14 +4,8 @@
 	"load_model_at_start": "",
 	
 	"num_epochs": 2,
-	"learning_rate": 0.001,
-	"batch_size": 64,
-	"dropout": 0,
-	"weight_decay": 0,
-	"num_neurons": [300, 300, 300, 300],
-	"batch_norms": 3,
-	"k": 3,
 
+	"overwrite": true,
 	"seed": 0,
 	"analysis_freq": 1,
 	"output_dir": "output",

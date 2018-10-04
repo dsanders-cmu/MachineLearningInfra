@@ -20,10 +20,19 @@ def parse_arguments():
     return config
 
 def init_directories(config):
+    overwrite = config['overwrite']
+
     output_dir = config['output_dir']
     create_dir(output_dir)
 
     base_dir = os.path.join(output_dir, config['model_name'])
+    if overwrite:
+        delete_dir(base_dir)
+    else:
+        current = get_current_time_str()
+        create_dir(base_dir)
+        base_dir = os.path.join(base_dir, current)
+
     create_dir(base_dir)
 
     model_dir = os.path.join(base_dir, 'model')

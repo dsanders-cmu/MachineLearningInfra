@@ -1,10 +1,27 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import shutil
+import datetime
 
 def create_dir(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
+
+def delete_dir(dir_path):
+    try:
+        shutil.rmtree(dir_path)
+    except OSError as e:
+        pass
+
+def get_current_time_str():
+    current = datetime.datetime.now().isoformat()
+    tmp = current.split('.')
+    current = tmp[0]
+    current = current.replace('-', '_')
+    current = current.replace(':', '_')
+
+    return current
 
 def generate_standard_plot(dest, x, x_label, y, y_label, title, num_plots=1, legends=[]):
     plt.clf()
